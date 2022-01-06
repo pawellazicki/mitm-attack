@@ -1,24 +1,26 @@
 version: "3.7"
 
 services:
-    host:
+    client:
         image: jlesage/firefox
-        container_name: mitm_host
+        container_name: mitm_client
         restart: always
         volumes:
             - /dev/shm:/dev/shm
         ports:
             - "5800:5800"
         networks:
-            - mitm
-    messenger-client:
+            mitm:
+                ipv4_address: 
+    server:
         image: aikain/simplehttpserver:0.1
-        container_name: mitm_messenger-client
+        container_name: mitm_server
         restart: always
         volumes:
-            - ./messenger-client:/var/www
+            - ./server:/var/www
         networks:
-            - mitm
+            mitm:
+                ipv4_address: 
     hacker:
         privileged: true
         build: .
@@ -26,12 +28,15 @@ services:
         volumes:
             - ./hacker:/hacks
         sysctls:
-            # Necessary for transparent mode for mitmproxy
             - net.ipv4.ip_forward=1
             - net.ipv6.conf.all.forwarding=1
             - net.ipv4.conf.all.send_redirects=0
         networks:
-            - mitm
+            mitm:
+                ipv4_address: 
 
 networks:
     mitm:
+        ipam:
+            config:
+                - subnet: 192.168.0.0/24
