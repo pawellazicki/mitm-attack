@@ -11,7 +11,7 @@ services:
             - "5800:5800"
         networks:
             mitm:
-                ipv4_address: 
+                ipv4_address: xxx.xxx.xxx.xxx
     server:
         image: aikain/simplehttpserver:0.1
         container_name: mitm_server
@@ -20,7 +20,7 @@ services:
             - ./server:/var/www
         networks:
             mitm:
-                ipv4_address: 
+                ipv4_address: xxx.xxx.xxx.xxx
     hacker:
         privileged: true
         build: .
@@ -33,10 +33,10 @@ services:
             - net.ipv4.conf.all.send_redirects=0
         networks:
             mitm:
-                ipv4_address: 
+                ipv4_address: xxx.xxx.xxx.xxx
 
 networks:
     mitm:
         ipam:
             config:
-                - subnet: 192.168.0.0/24
+                - subnet: xxx.xxx.xxx.xxx/xxx
